@@ -35,7 +35,14 @@ export default function App() {
   const [burst, setBurst] = useState(false)
   const [wish, setWish] = useState('')
   const [studentName, setStudentName] = useState('')
-  const [notes, setNotes] = useState(starterNotes)
+  const [notes, setNotes] = useState(() => {
+    try {
+      const deletedNotes = JSON.parse(window.localStorage.getItem('teachers-day-deleted-notes') || '[]')
+      return starterNotes.filter(([text]) => !deletedNotes.includes(text))
+    } catch {
+      return starterNotes
+    }
+  })
   const [submitStatus, setSubmitStatus] = useState('')
   const [messageMode, setMessageMode] = useState('student')
   const [isRecording, setIsRecording] = useState(false)
@@ -184,7 +191,16 @@ export default function App() {
   }
 
   const deleteNote = (noteIndex) => {
-    setNotes((current) => current.filter((_, index) => index !== noteIndex))
+    setNotes((current) => {
+      const noteToDelete = current[noteIndex]?.[0]
+      if (noteToDelete) {
+        const deletedNotes = JSON.parse(window.localStorage.getItem('teachers-day-deleted-notes') || '[]')
+        if (!deletedNotes.includes(noteToDelete)) {
+          window.localStorage.setItem('teachers-day-deleted-notes', JSON.stringify([...deletedNotes, noteToDelete]))
+        }
+      }
+      return current.filter((_, index) => index !== noteIndex)
+    })
   }
 
   return (
