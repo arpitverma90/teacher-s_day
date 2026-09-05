@@ -200,6 +200,10 @@ export default function App() {
     }
   }
 
+  const deleteNote = (noteIndex) => {
+    setNotes((current) => current.filter((_, index) => index !== noteIndex))
+  }
+
   return (
     <main className="app-shell">
       <ChalkDust />
@@ -274,7 +278,7 @@ export default function App() {
           <div className="wall-tabs" role="tablist" aria-label="Thank-you wall content">
             <button type="button" className={wallView === 'notes' ? 'active' : ''} onClick={() => setWallView('notes')}>Pinned notes ({notes.length})</button>
           </div>
-          {wallView === 'notes' ? <div className="wall">{notes.map(([text, author], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small className="note-author"><strong>{author}</strong></small></article>)}</div> : <div className="video-wall">{pinnedVideos.length ? pinnedVideos.map((video, index) => <article className="pinned-video" key={`${video.url}-${index}`}><video src={video.url} controls playsInline /><small>{video.label}</small></article>) : <p className="empty-wall">No videos pinned yet. Record one and choose Pin video.</p>}</div>}
+          {wallView === 'notes' ? <div className="wall">{notes.map(([text, author], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small className="note-author"><strong>{author}</strong></small><button className="delete-note" type="button" onClick={() => deleteNote(index)} aria-label={`Delete note by ${author}`}>Delete</button></article>)}</div> : <div className="video-wall">{pinnedVideos.length ? pinnedVideos.map((video, index) => <article className="pinned-video" key={`${video.url}-${index}`}><video src={video.url} controls playsInline /><small>{video.label}</small></article>) : <p className="empty-wall">No videos pinned yet. Record one and choose Pin video.</p>}</div>}
                         {recordedVideo && !isRecording && <><button type="button" className="share-video" onClick={shareVideo}>Share video</button>{videoMode === 'student' && <button type="button" className="pin-video" onClick={pinVideo}>Pin video</button>}<button type="button" className="delete-video" onClick={deleteVideo}>Delete video</button></>}
           <div className="message-mode" role="group" aria-label="Choose message direction">
             <button type="button" className={messageMode === 'student' ? 'active' : ''} onClick={() => setMessageMode('student')}>Student → Teacher</button>
