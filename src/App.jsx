@@ -54,6 +54,7 @@ export default function App() {
   const [isRecording, setIsRecording] = useState(false)
   const [recordedVideo, setRecordedVideo] = useState(null)
   const [recordStatus, setRecordStatus] = useState('')
+  const [videoMode, setVideoMode] = useState('student')
   const mediaRecorderRef = useRef(null)
   const cameraStreamRef = useRef(null)
   const videoPreviewRef = useRef(null)
@@ -83,9 +84,18 @@ export default function App() {
         recordedUrlRef.current = url
         setRecordedVideo({ blob, url })
         setRecordStatus('Your video is ready to share.')
+        if (videoPreviewRef.current) {
+          videoPreviewRef.current.srcObject = null
+          videoPreviewRef.current.src = url
+          videoPreviewRef.current.controls = true
+        }
         stream.getTracks().forEach((track) => track.stop())
       }
       if (videoPreviewRef.current) videoPreviewRef.current.srcObject = stream
+      if (videoPreviewRef.current) {
+        videoPreviewRef.current.src = ''
+        videoPreviewRef.current.controls = false
+      }
       recorder.start()
       setIsRecording(true)
       setRecordStatus('Recording... say something wonderful!')
@@ -105,7 +115,7 @@ export default function App() {
     const file = new File([recordedVideo.blob], 'teachers-day-message.webm', { type: 'video/webm' })
     if (navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) {
       try {
-        await navigator.share({ title: 'Teachers\' Day video message', text: 'A Teachers\' Day message', files: [file] })
+        await navigator.share({ title: 'Teachers\' Day video message', text: `${videoMode === 'student' ? 'Student to teacher' : 'Teacher to student'} video message`, files: [file] })
         setRecordStatus('Video shared successfully.')
         return
       } catch (error) {
@@ -116,8 +126,22 @@ export default function App() {
     link.href = recordedVideo.url
     link.download = file.name
     link.click()
-    window.location.href = `mailto:vermaarp2361@gmail.com,archanak28@gmail.com?subject=Teachers%27%20Day%20video%20message&body=Please%20attach%20the%20downloaded%20Teachers%27%20Day%20video%20message%20to%20this%20email.`
+    const subject = encodeURIComponent(`${videoMode === 'student' ? 'Student to teacher' : 'Teacher to student'} video message`)
+    window.location.href = `mailto:vermaarp2361@gmail.com,archanak28@gmail.com?subject=${subject}&body=Please%20attach%20the%20downloaded%20Teachers%27%20Day%20video%20message%20to%20this%20email.`
     setRecordStatus('Video downloaded. Attach it to the email draft.')
+  }
+
+  const deleteVideo = () => {
+    if (recordedUrlRef.current) URL.revokeObjectURL(recordedUrlRef.current)
+    recordedUrlRef.current = ''
+    setRecordedVideo(null)
+    setRecordStatus('Video deleted. You can record again.')
+    if (videoPreviewRef.current) {
+      videoPreviewRef.current.pause()
+      videoPreviewRef.current.removeAttribute('src')
+      videoPreviewRef.current.load()
+      videoPreviewRef.current.controls = false
+    }
   }
 
   const modeCopy = messageMode === 'student'
@@ -222,13 +246,17 @@ export default function App() {
             <div>
               <span className="section-kicker">A message in motion</span>
               <h2 id="video-title">Record a video for the board</h2>
-              <p>Say thank you, share a memory, or send a little encouragement.</p>
+              <p>{videoMode === 'student' ? 'Students can say thank you, share a memory, or celebrate a teacher.' : 'Teachers can send encouragement, guidance, or a message to a student.'}</p>
             </div>
             <video ref={videoPreviewRef} className={isRecording ? 'recording' : ''} autoPlay muted playsInline />
+            <div className="video-mode" role="group" aria-label="Choose who is sending the video">
+              <button type="button" className={videoMode === 'student' ? 'active' : ''} onClick={() => setVideoMode('student')}>Student → Teacher</button>
+              <button type="button" className={videoMode === 'teacher' ? 'active' : ''} onClick={() => setVideoMode('teacher')}>Teacher → Student</button>
+            </div>
             <div className="video-controls">
               {!isRecording && <button type="button" onClick={startRecording}>{recordedVideo ? 'Record again' : 'Start recording'}</button>}
               {isRecording && <button type="button" className="stop-recording" onClick={stopRecording}>Stop recording</button>}
-              {recordedVideo && !isRecording && <button type="button" className="share-video" onClick={shareVideo}>Share video</button>}
+              {recordedVideo && !isRecording && <><button type="button" className="share-video" onClick={shareVideo}>Share video</button><button type="button" className="delete-video" onClick={deleteVideo}>Delete video</button></>}
             </div>
             <small>{recordStatus || 'Your browser will ask for camera and microphone permission.'}</small>
           </section>
