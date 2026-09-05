@@ -61,7 +61,7 @@ export default function App() {
             <p className="gate-copy">Type in a teacher&apos;s name, and the whole board<br />lights up just for them.</p>
             <form className="gate-form" onSubmit={openBoard}>
               <label htmlFor="teacherName">Who are we celebrating today?</label>
-              <input id="teacherName" value={teacherName} onChange={(event) => setTeacherName(event.target.value)} placeholder="Type name" autoComplete="off" autoFocus />
+              <input id="teacherName" value={teacherName} onChange={(event) => setTeacherName(event.target.value)} placeholder="Type Name" autoComplete="off" autoFocus />
               <button type="submit" className="open-btn">Open the board <span>→</span></button>
             </form>
             <p className="gate-fine">Best viewed with the sound of chalk on a blackboard, in your head.</p>
