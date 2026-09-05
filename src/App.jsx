@@ -1,18 +1,18 @@
 import { useState } from 'react'
 
 const tributes = [
-  ['◷', 'Patience'],
-  ['⌁', 'Curiosity'],
-  ['✦', 'Encouragement'],
-  ['♡', 'Care'],
-  ['▤', 'Stories that stuck'],
-  ['✳', 'Believing in us'],
+  ['</>', 'Debugging with us'],
+  ['⌁', 'Curiosity in every line'],
+  ['✦', 'Turning bugs into lessons'],
+  ['♡', 'Patience through every loop'],
+  ['▤', 'Algorithms that stayed'],
+  ['✳', 'Believing in our code'],
 ]
 
 const starterNotes = [
   ['Explained it three times without once making me feel slow.', 'a student, years later'],
-  ['Remembered my name on day one and never got it wrong again.', 'class of some year'],
-  ['Made the back bench feel like the front row.', 'someone who sat there'],
+  ['Made every error feel like a clue instead of a failure.', 'one very grateful developer'],
+  ['Taught us that the best programs start with better questions.', 'class of future builders'],
 ]
 
 function ChalkDust() {
@@ -58,7 +58,7 @@ export default function App() {
             <span className="eyebrow-mark">5th September</span>
             <h1 className="chalk-title"><span>Happy</span><strong>Teacher&apos;s Day</strong></h1>
             <div className="chalk-squiggle" aria-hidden="true">〰〰〰</div>
-            <p className="gate-copy">Type in a teacher&apos;s name, and the whole board<br />lights up just for them.</p>
+            <p className="gate-copy">Type in your CS teacher&apos;s name, and the whole board<br />compiles a little thank-you just for them.</p>
             <form className="gate-form" onSubmit={openBoard}>
               <label htmlFor="teacherName">Who are we celebrating today?</label>
               <input id="teacherName" value={teacherName} onChange={(event) => setTeacherName(event.target.value)} placeholder="Type Name" autoComplete="off" autoFocus />
@@ -74,19 +74,20 @@ export default function App() {
           <header className="dash-top">
             <span className="dash-eyebrow">a little board, a lot of gratitude</span>
             <h1>Happy Teacher&apos;s Day,<br /><span>{teacherName}</span> ✦</h1>
-            <p>Every subject you taught was really just one lesson in disguise: that someone believed in us before we believed in ourselves.</p>
+            <p>Behind every confident programmer is a teacher who made the first error feel safe to make, understand, and fix.</p>
           </header>
 
           <div className="notes-grid">
-            <article className="chalk-note"><div className="tape" /><h2>Why today</h2><p>India marks Teacher&apos;s Day on 5th September, the birthday of Dr. Sarvepalli Radhakrishnan, who asked that his birthday be spent honouring every teacher instead of him.</p></article>
-            <article className="chalk-note"><div className="tape" /><h2>Today&apos;s chalk-thought</h2><p>A good teacher doesn&apos;t hand you the answer. They hand you the confidence to go find it, and stick around in case you get lost.</p></article>
+            <article className="chalk-note"><div className="tape" /><h2>Why today</h2><p>India marks Teacher&apos;s Day on 5th September, the birthday of Dr. Sarvepalli Radhakrishnan. Today we celebrate the teachers who help every curious mind become a builder.</p></article>
+            <article className="chalk-note"><div className="tape" /><h2>Today&apos;s commit message</h2><p>Thank you for reviewing our rough drafts, explaining the impossible, and reminding us that every great project starts with one brave line of code.</p></article>
           </div>
 
           <div className="tribute-grid">{tributes.map(([icon, label]) => <div className="tribute" key={label}><span>{icon}</span><strong>{label}</strong></div>)}</div>
           <h2 className="wall-title">The thank-you wall</h2>
+          <p className="wall-caption">Leave a message for the teacher behind your next breakthrough.</p>
           <div className="wall">{notes.map(([text, author], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small>— {author}</small></article>)}</div>
           <form className="add-wish" onSubmit={addWish}><input value={wish} onChange={(event) => setWish(event.target.value)} placeholder="Add your own thank-you note..." /><button type="submit">Pin it</button></form>
-          <footer className="board-footer"><span>◉</span><p>With gratitude, from all of us.</p></footer>
+          <footer className="board-footer"><span>◉</span><p>With gratitude, from all of us.</p><small>// keep learning. keep building. keep helping others.</small></footer>
         </section>
       )}
     </main>
