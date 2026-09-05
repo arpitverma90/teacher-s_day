@@ -88,23 +88,23 @@ export default function App() {
             <span className="eyebrow-mark">5th September</span>
             <h1 className="chalk-title"><span>Happy</span><strong>Teacher&apos;s Day</strong></h1>
             <div className="chalk-squiggle" aria-hidden="true">〰〰〰</div>
-            <p className="gate-copy">Type in your CS teacher&apos;s name, and the whole board<br />compiles a little thank-you just for them.</p>
+            <p className="gate-copy">Teacher, type your name to open a board made<br />especially for you by your students.</p>
             <form className="gate-form" onSubmit={openBoard}>
-              <label htmlFor="teacherName">Who are we celebrating today?</label>
+              <label htmlFor="teacherName">Teacher, what should we call you?</label>
               <input id="teacherName" value={teacherName} onChange={(event) => setTeacherName(event.target.value)} placeholder="Type Name" autoComplete="off" autoFocus />
-              <button type="submit" className="open-btn">Open the board <span>→</span></button>
+              <button type="submit" className="open-btn">Open my teacher board <span>→</span></button>
             </form>
-            <p className="gate-fine">Best viewed with the sound of chalk on a blackboard, in your head.</p>
+            <p className="gate-fine">A small thank-you from the students whose future you helped build.</p>
             <div className="chalk-tray" aria-hidden="true" />
           </div>
         </section>
       ) : (
         <section className="dashboard" aria-label="Personalized Teachers' Day board">
-          <button className="switch-name" type="button" onClick={() => setIsOpen(false)}>✎ not the right name?</button>
+          <button className="switch-name" type="button" onClick={() => setIsOpen(false)}>✎ Change teacher name</button>
           <header className="dash-top">
             <span className="dash-eyebrow">a little board, a lot of gratitude</span>
             <h1>Happy Teacher&apos;s Day,<br /><span>{teacherName}</span> ✦</h1>
-            <p>Behind every confident programmer is a teacher who made the first error feel safe to make, understand, and fix.</p>
+            <p>Your students made this board for you: behind every confident programmer is a teacher who made the first error feel safe to make, understand, and fix.</p>
           </header>
 
           <div className="notes-grid">
