@@ -159,7 +159,7 @@ export default function App() {
 
   const openBoard = (event) => {
     event.preventDefault()
-    setTeacherName((name) => name.trim() || 'Teacher')
+    setTeacherName((name) => name.trim() || 'Shiraj Sir')
     setBurst(true)
     window.setTimeout(() => setIsOpen(true), 520)
     window.setTimeout(() => setBurst(false), 4600)
