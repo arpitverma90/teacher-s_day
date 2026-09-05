@@ -15,6 +15,8 @@ const starterNotes = [
   ["Happy Teachers' Day! Thank you for patiently explaining things, turning every mistake into a learning opportunity, and teaching us that the best progress starts with better questions. Your guidance truly inspires us to learn and grow.", 'Archana Kamble'],
 ]
 
+const removeTemporaryNote = (savedNotes) => savedNotes.filter(([text, author]) => !(text.trim().toLowerCase() === 'thank you' && author.trim().toLowerCase() === 'arpit'))
+
 const classroomCaptions = [
   ['Teacher', 'You did not just teach syntax. You taught us how to think clearly when the answer was still hidden.'],
   ['Student', 'Every “try again” became confidence, and every solved bug became a little celebration.'],
@@ -38,7 +40,7 @@ export default function App() {
   const [notes, setNotes] = useState(() => {
     try {
       const savedNotes = window.localStorage.getItem('teachers-day-notes')
-      return savedNotes ? JSON.parse(savedNotes) : starterNotes
+      return savedNotes ? removeTemporaryNote(JSON.parse(savedNotes)) : starterNotes
     } catch {
       return starterNotes
     }
