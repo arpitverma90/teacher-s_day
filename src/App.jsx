@@ -208,6 +208,14 @@ export default function App() {
     <main className="app-shell">
       <ChalkDust />
       <Petals burst={burst} />
+      <div className="data-background" aria-hidden="true">
+        <div className="data-label label-one">SQL / INSIGHTS</div>
+        <div className="data-label label-two">ETL PIPELINE</div>
+        <div className="data-label label-three">DATA STORY</div>
+        <div className="data-chart chart-bars"><i /><i /><i /><i /><i /></div>
+        <div className="data-chart chart-line"><span /><span /><span /><span /><span /></div>
+        <div className="data-nodes"><i /><i /><i /><i /><i /></div>
+      </div>
       {!isOpen ? (
         <section className="gate" aria-label="Open your Teachers' Day board">
           <div className="board-frame">
