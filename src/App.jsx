@@ -55,6 +55,8 @@ export default function App() {
   const [recordedVideo, setRecordedVideo] = useState(null)
   const [recordStatus, setRecordStatus] = useState('')
   const [videoMode, setVideoMode] = useState('student')
+  const [wallView, setWallView] = useState('notes')
+  const [pinnedVideos, setPinnedVideos] = useState([])
   const mediaRecorderRef = useRef(null)
   const cameraStreamRef = useRef(null)
   const videoPreviewRef = useRef(null)
@@ -132,6 +134,13 @@ export default function App() {
   }
 
   const deleteVideo = () => {
+
+      const pinVideo = () => {
+        if (!recordedVideo || videoMode !== 'student') return
+        setPinnedVideos((current) => [...current, { url: URL.createObjectURL(recordedVideo.blob), label: 'Student video message' }])
+        setWallView('videos')
+        setRecordStatus('Video pinned to the Videos wall.')
+      }
     if (recordedUrlRef.current) URL.revokeObjectURL(recordedUrlRef.current)
     recordedUrlRef.current = ''
     setRecordedVideo(null)
@@ -262,7 +271,12 @@ export default function App() {
           </section>
           <h2 className="wall-title">The thank-you wall</h2>
           <p className="wall-caption">A shared space for the people who teach, learn, and grow together.</p>
-          <div className="wall">{notes.map(([text, author], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small className="note-author"><strong>{author}</strong></small></article>)}</div>
+          <div className="wall-tabs" role="tablist" aria-label="Thank-you wall content">
+            <button type="button" className={wallView === 'notes' ? 'active' : ''} onClick={() => setWallView('notes')}>Pinned notes ({notes.length})</button>
+            <button type="button" className={wallView === 'videos' ? 'active' : ''} onClick={() => setWallView('videos')}>Pinned videos ({pinnedVideos.length})</button>
+          </div>
+          {wallView === 'notes' ? <div className="wall">{notes.map(([text, author], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small className="note-author"><strong>{author}</strong></small></article>)}</div> : <div className="video-wall">{pinnedVideos.length ? pinnedVideos.map((video, index) => <article className="pinned-video" key={`${video.url}-${index}`}><video src={video.url} controls playsInline /><small>{video.label}</small></article>) : <p className="empty-wall">No videos pinned yet. Record one and choose Pin video.</p>}</div>}
+                        {recordedVideo && !isRecording && <><button type="button" className="share-video" onClick={shareVideo}>Share video</button>{videoMode === 'student' && <button type="button" className="pin-video" onClick={pinVideo}>Pin video</button>}<button type="button" className="delete-video" onClick={deleteVideo}>Delete video</button></>}
           <div className="message-mode" role="group" aria-label="Choose message direction">
             <button type="button" className={messageMode === 'student' ? 'active' : ''} onClick={() => setMessageMode('student')}>Student → Teacher</button>
             <button type="button" className={messageMode === 'teacher' ? 'active' : ''} onClick={() => setMessageMode('teacher')}>Teacher → Student</button>
