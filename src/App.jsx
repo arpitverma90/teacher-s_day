@@ -34,6 +34,7 @@ export default function App() {
   const [isOpen, setIsOpen] = useState(false)
   const [burst, setBurst] = useState(false)
   const [wish, setWish] = useState('')
+  const [studentName, setStudentName] = useState('')
   const [notes, setNotes] = useState(starterNotes)
   const [submitStatus, setSubmitStatus] = useState('')
   const [messageMode, setMessageMode] = useState('student')
@@ -54,6 +55,7 @@ export default function App() {
     event.preventDefault()
     const cleanWish = wish.trim()
     if (!cleanWish) return
+    const cleanStudentName = studentName.trim() || 'A grateful student'
     setSubmitStatus('Sending...')
     try {
       const response = await fetch('https://formsubmit.co/ajax/vermaarp2361@gmail.com', {
@@ -62,13 +64,14 @@ export default function App() {
         body: JSON.stringify({
           _subject: `${modeCopy.label} message for ${teacherName}`,
           direction: modeCopy.label,
+          student: cleanStudentName,
           teacher: teacherName,
           message: cleanWish,
           _template: 'table',
         }),
       })
       if (!response.ok) throw new Error('Message could not be sent')
-      setNotes((current) => [...current, [cleanWish, modeCopy.label]])
+      setNotes((current) => [...current, [cleanWish, `${cleanStudentName} · ${modeCopy.label}`]])
       setWish('')
       setSubmitStatus('Sent to the teacher board owner!')
       setBurst(true)
@@ -137,7 +140,11 @@ export default function App() {
             <button type="button" className={messageMode === 'teacher' ? 'active' : ''} onClick={() => setMessageMode('teacher')}>Teacher → Student</button>
           </div>
           <p className="message-mode-label">{modeCopy.label}</p>
-          <form className="add-wish" onSubmit={addWish}><input value={wish} onChange={(event) => { setWish(event.target.value); setSubmitStatus('') }} placeholder={modeCopy.placeholder} /><button type="submit" disabled={submitStatus === 'Sending...'}>{submitStatus === 'Sending...' ? 'Sending...' : 'Pin & email'}</button></form>
+          <form className="add-wish" onSubmit={addWish}>
+            <input className="student-name-input" value={studentName} onChange={(event) => { setStudentName(event.target.value); setSubmitStatus('') }} placeholder="Student name" aria-label="Student name" />
+            <input value={wish} onChange={(event) => { setWish(event.target.value); setSubmitStatus('') }} placeholder={modeCopy.placeholder} aria-label="Thank-you message" />
+            <button type="submit" disabled={submitStatus === 'Sending...'}>{submitStatus === 'Sending...' ? 'Sending...' : 'Pin & email'}</button>
+          </form>
           {submitStatus && <p className={`submit-status ${submitStatus.startsWith('Sent') ? 'success' : 'error'}`}>{submitStatus}</p>}
           <footer className="board-footer"><span>◉</span><p>With gratitude, from all of us.</p><small>// keep learning. keep building. keep helping others.</small></footer>
         </section>
