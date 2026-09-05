@@ -71,9 +71,11 @@ export default function App() {
         }),
       })
       if (!response.ok) throw new Error('Message could not be sent')
-      setNotes((current) => [...current, [cleanWish, cleanStudentName, modeCopy.label]])
+      if (messageMode === 'student') {
+        setNotes((current) => [...current, [cleanWish, cleanStudentName, modeCopy.label]])
+      }
       setWish('')
-      setSubmitStatus('Sent to the teacher board owner!')
+      setSubmitStatus(messageMode === 'student' ? 'Pinned and sent to the teacher board owner!' : 'Sent privately to the student!')
       setBurst(true)
       window.setTimeout(() => setBurst(false), 4600)
     } catch {
@@ -143,7 +145,7 @@ export default function App() {
           <form className={`add-wish ${messageMode === 'teacher' ? 'teacher-mode' : 'student-mode'}`} onSubmit={addWish}>
             {messageMode === 'student' && <input className="student-name-input" value={studentName} onChange={(event) => { setStudentName(event.target.value); setSubmitStatus('') }} placeholder="Student name" aria-label="Student name" />}
             <input value={wish} onChange={(event) => { setWish(event.target.value); setSubmitStatus('') }} placeholder={modeCopy.placeholder} aria-label="Thank-you message" />
-            <button type="submit" disabled={submitStatus === 'Sending...'}>{submitStatus === 'Sending...' ? 'Sending...' : 'Pin & email'}</button>
+            <button type="submit" disabled={submitStatus === 'Sending...'}>{submitStatus === 'Sending...' ? 'Sending...' : messageMode === 'teacher' ? 'Send email' : 'Pin & email'}</button>
           </form>
           {submitStatus && <p className={`submit-status ${submitStatus.startsWith('Sent') ? 'success' : 'error'}`}>{submitStatus}</p>}
           <footer className="board-footer"><span>◉</span><p>With gratitude, from all of us.</p><small>// keep learning. keep building. keep helping others.</small></footer>
