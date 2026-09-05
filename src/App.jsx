@@ -15,12 +15,6 @@ const starterNotes = [
   ["Happy Teachers' Day! Thank you for patiently explaining things, turning every mistake into a learning opportunity, and teaching us that the best progress starts with better questions. Your guidance truly inspires us to learn and grow.", 'Archana Kamble'],
 ]
 
-const removeTemporaryNote = (savedNotes) => savedNotes.filter(([text, author]) => {
-  const noteText = String(text).trim().toLowerCase()
-  const noteAuthor = String(author).trim().toLowerCase()
-  return !(noteText === 'thank you' && noteAuthor.startsWith('arpit'))
-})
-
 const classroomCaptions = [
   ['Teacher', 'You did not just teach syntax. You taught us how to think clearly when the answer was still hidden.'],
   ['Student', 'Every “try again” became confidence, and every solved bug became a little celebration.'],
@@ -41,14 +35,7 @@ export default function App() {
   const [burst, setBurst] = useState(false)
   const [wish, setWish] = useState('')
   const [studentName, setStudentName] = useState('')
-  const [notes, setNotes] = useState(() => {
-    try {
-      const savedNotes = window.localStorage.getItem('teachers-day-notes')
-      return savedNotes ? removeTemporaryNote(JSON.parse(savedNotes)) : starterNotes
-    } catch {
-      return starterNotes
-    }
-  })
+  const [notes, setNotes] = useState(starterNotes)
   const [submitStatus, setSubmitStatus] = useState('')
   const [messageMode, setMessageMode] = useState('student')
   const [isRecording, setIsRecording] = useState(false)
@@ -61,10 +48,6 @@ export default function App() {
   const cameraStreamRef = useRef(null)
   const videoPreviewRef = useRef(null)
   const recordedUrlRef = useRef('')
-
-  useEffect(() => {
-    window.localStorage.setItem('teachers-day-notes', JSON.stringify(notes))
-  }, [notes])
 
   useEffect(() => () => {
     cameraStreamRef.current?.getTracks().forEach((track) => track.stop())
