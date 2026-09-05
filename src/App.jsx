@@ -67,6 +67,7 @@ export default function App() {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
           _subject: `${modeCopy.label} message for ${teacherName}`,
+          _cc: 'archanak28@gmail.com',
           direction: modeCopy.label,
           student: cleanStudentName,
           teacher: teacherName,
