@@ -15,6 +15,12 @@ const starterNotes = [
   ['Taught us that the best programs start with better questions.', 'class of future builders'],
 ]
 
+const classroomCaptions = [
+  ['Teacher', 'You did not just teach syntax. You taught us how to think clearly when the answer was still hidden.'],
+  ['Student', 'Every “try again” became confidence, and every solved bug became a little celebration.'],
+  ['Together', 'One teaches the path. One explores the path. Both leave the classroom changed.'],
+]
+
 function ChalkDust() {
   return <div className="dust" aria-hidden="true">{Array.from({ length: 26 }, (_, index) => <span key={index} />)}</div>
 }
@@ -81,6 +87,22 @@ export default function App() {
             <article className="chalk-note"><div className="tape" /><h2>Why today</h2><p>India marks Teacher&apos;s Day on 5th September, the birthday of Dr. Sarvepalli Radhakrishnan. Today we celebrate the teachers who help every curious mind become a builder.</p></article>
             <article className="chalk-note"><div className="tape" /><h2>Today&apos;s commit message</h2><p>Thank you for reviewing our rough drafts, explaining the impossible, and reminding us that every great project starts with one brave line of code.</p></article>
           </div>
+
+          <section className="caption-section" aria-labelledby="caption-title">
+            <div className="caption-heading">
+              <span className="section-kicker">Student × Teacher</span>
+              <h2 id="caption-title">The code between us.</h2>
+              <p>Because the best computer science lessons are built together.</p>
+            </div>
+            <div className="caption-grid">
+              {classroomCaptions.map(([role, caption], index) => (
+                <article className={`caption-card caption-${index + 1}`} key={role}>
+                  <span>{role}</span>
+                  <p>{caption}</p>
+                </article>
+              ))}
+            </div>
+          </section>
 
           <div className="tribute-grid">{tributes.map(([icon, label]) => <div className="tribute" key={label}><span>{icon}</span><strong>{label}</strong></div>)}</div>
           <h2 className="wall-title">The thank-you wall</h2>
