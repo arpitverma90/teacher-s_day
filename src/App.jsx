@@ -1,84 +1,94 @@
 import { useState } from 'react'
 
-const lessons = [
-  { number: '01', title: 'You made room for questions', text: 'The best lessons began when you let curiosity lead the way.', color: 'coral' },
-  { number: '02', title: 'You noticed the quiet wins', text: 'You saw progress before we knew how to name it ourselves.', color: 'sage' },
-  { number: '03', title: 'You taught us to keep going', text: 'Your patience turned difficult days into steps forward.', color: 'gold' },
+const tributes = [
+  ['◷', 'Patience'],
+  ['⌁', 'Curiosity'],
+  ['✦', 'Encouragement'],
+  ['♡', 'Care'],
+  ['▤', 'Stories that stuck'],
+  ['✳', 'Believing in us'],
 ]
 
+const starterNotes = [
+  ['Explained it three times without once making me feel slow.', 'a student, years later'],
+  ['Remembered my name on day one and never got it wrong again.', 'class of some year'],
+  ['Made the back bench feel like the front row.', 'someone who sat there'],
+]
+
+function ChalkDust() {
+  return <div className="dust" aria-hidden="true">{Array.from({ length: 26 }, (_, index) => <span key={index} />)}</div>
+}
+
+function Petals({ burst }) {
+  return <div className={`petals ${burst ? 'burst' : ''}`} aria-hidden="true">{Array.from({ length: 28 }, (_, index) => <i key={index} />)}</div>
+}
+
 export default function App() {
+  const [teacherName, setTeacherName] = useState('')
   const [isOpen, setIsOpen] = useState(false)
-  const [activeLesson, setActiveLesson] = useState(0)
-  const lesson = lessons[activeLesson]
+  const [burst, setBurst] = useState(false)
+  const [wish, setWish] = useState('')
+  const [notes, setNotes] = useState(starterNotes)
+
+  const openBoard = (event) => {
+    event.preventDefault()
+    setTeacherName((name) => name.trim() || 'Teacher')
+    setBurst(true)
+    window.setTimeout(() => setIsOpen(true), 520)
+    window.setTimeout(() => setBurst(false), 4600)
+  }
+
+  const addWish = (event) => {
+    event.preventDefault()
+    const cleanWish = wish.trim()
+    if (!cleanWish) return
+    setNotes((current) => [...current, [cleanWish, 'you, just now']])
+    setWish('')
+    setBurst(true)
+    window.setTimeout(() => setBurst(false), 4600)
+  }
 
   return (
-    <main className="page">
-      <div className="ambient ambient-one" />
-      <div className="ambient ambient-two" />
-
-      <section className="card" aria-label="Interactive Teachers' Day card">
-        <div className="topline">
-          <span className="eyebrow">A note worth keeping</span>
-          <span className="year">05 / 09</span>
-        </div>
-
-        <div className="hero-copy">
-          <p className="kicker">For the ones who make learning feel possible</p>
-          <h1>Happy <em>Teachers&apos; Day</em></h1>
-          <p className="intro">Some people teach a subject. The rare ones teach us how to see ourselves.</p>
-        </div>
-
-        <div className="orbit orbit-left" aria-hidden="true"><span /><span /><span /></div>
-        <div className="orbit orbit-right" aria-hidden="true"><span /><span /><span /></div>
-
-        <div className={`letter-stage ${isOpen ? 'is-open' : ''}`}>
-          <div className="letter-glow" />
-          <div className="letter" aria-live="polite">
-            <div className="letter-top">
-              <span>Dear teacher,</span>
-              <span className="letter-mark">✦</span>
-            </div>
-            <p>Thank you for making room for our questions, our mistakes, and our becoming.</p>
-            <p className="signature">With gratitude, always.</p>
-            <span className="letter-heart">♥</span>
+    <main className="app-shell">
+      <ChalkDust />
+      <Petals burst={burst} />
+      {!isOpen ? (
+        <section className="gate" aria-label="Open your Teachers' Day board">
+          <div className="board-frame">
+            <span className="eyebrow-mark">5th September</span>
+            <h1 className="chalk-title"><span>Happy</span><strong>Teacher&apos;s Day</strong></h1>
+            <div className="chalk-squiggle" aria-hidden="true">〰〰〰</div>
+            <p className="gate-copy">Type in a teacher&apos;s name, and the whole board<br />lights up just for them.</p>
+            <form className="gate-form" onSubmit={openBoard}>
+              <label htmlFor="teacherName">Who are we celebrating today?</label>
+              <input id="teacherName" value={teacherName} onChange={(event) => setTeacherName(event.target.value)} placeholder="e.g. Arpit Sir" autoComplete="off" autoFocus />
+              <button type="submit" className="open-btn">Open the board <span>→</span></button>
+            </form>
+            <p className="gate-fine">Best viewed with the sound of chalk on a blackboard, in your head.</p>
+            <div className="chalk-tray" aria-hidden="true" />
           </div>
-          <button className="seal" type="button" onClick={() => setIsOpen((open) => !open)} aria-expanded={isOpen}>
-            <span>{isOpen ? 'Close note' : 'Open note'}</span>
-            <strong>{isOpen ? '−' : '♥'}</strong>
-          </button>
-        </div>
+        </section>
+      ) : (
+        <section className="dashboard" aria-label="Personalized Teachers' Day board">
+          <button className="switch-name" type="button" onClick={() => setIsOpen(false)}>✎ not the right name?</button>
+          <header className="dash-top">
+            <span className="dash-eyebrow">a little board, a lot of gratitude</span>
+            <h1>Happy Teacher&apos;s Day,<br /><span>{teacherName}</span> ✦</h1>
+            <p>Every subject you taught was really just one lesson in disguise: that someone believed in us before we believed in ourselves.</p>
+          </header>
 
-        <div className="lesson-heading">
-          <div>
-            <span className="section-label">The lessons that stay</span>
-            <h2>More than a classroom.</h2>
+          <div className="notes-grid">
+            <article className="chalk-note"><div className="tape" /><h2>Why today</h2><p>India marks Teacher&apos;s Day on 5th September, the birthday of Dr. Sarvepalli Radhakrishnan, who asked that his birthday be spent honouring every teacher instead of him.</p></article>
+            <article className="chalk-note"><div className="tape" /><h2>Today&apos;s chalk-thought</h2><p>A good teacher doesn&apos;t hand you the answer. They hand you the confidence to go find it, and stick around in case you get lost.</p></article>
           </div>
-          <span className="lesson-count">{lesson.number} / 03</span>
-        </div>
 
-        <div className={`lesson lesson-${lesson.color}`} key={lesson.number}>
-          <span className="lesson-number">{lesson.number}</span>
-          <div>
-            <h3>{lesson.title}</h3>
-            <p>{lesson.text}</p>
-          </div>
-          <span className="arrow" aria-hidden="true">↗</span>
-        </div>
-
-        <div className="lesson-controls" aria-label="Choose a lesson">
-          {lessons.map((item, index) => (
-            <button className={index === activeLesson ? 'active' : ''} key={item.number} type="button" onClick={() => setActiveLesson(index)} aria-label={`Show lesson ${item.number}`} aria-pressed={index === activeLesson}>
-              <span />
-            </button>
-          ))}
-          <span className="swipe-note">Tap a chapter</span>
-        </div>
-
-        <footer className="footer-row">
-          <span>Thank you for helping us grow</span>
-          <span className="footer-heart">♥</span>
-        </footer>
-      </section>
+          <div className="tribute-grid">{tributes.map(([icon, label]) => <div className="tribute" key={label}><span>{icon}</span><strong>{label}</strong></div>)}</div>
+          <h2 className="wall-title">The thank-you wall</h2>
+          <div className="wall">{notes.map(([text, author], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small>— {author}</small></article>)}</div>
+          <form className="add-wish" onSubmit={addWish}><input value={wish} onChange={(event) => setWish(event.target.value)} placeholder="Add your own thank-you note..." /><button type="submit">Pin it</button></form>
+          <footer className="board-footer"><span>◉</span><p>With gratitude, from all of us.</p></footer>
+        </section>
+      )}
     </main>
   )
 }
