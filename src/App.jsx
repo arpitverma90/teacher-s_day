@@ -214,10 +214,8 @@ export default function App() {
             <span className="eyebrow-mark">5th September</span>
             <h1 className="chalk-title"><span>Happy</span><strong>Teacher&apos;s Day</strong></h1>
             <div className="chalk-squiggle" aria-hidden="true">〰〰〰</div>
-            <p className="gate-copy">Teacher, type your name to open a board made<br />especially for you by your students.</p>
+            <p className="gate-copy">A board made especially for teachers<br />by the students whose future you helped build.</p>
             <form className="gate-form" onSubmit={openBoard}>
-              <label htmlFor="teacherName">Teacher, what should we call you?</label>
-              <input id="teacherName" value={teacherName} onChange={(event) => setTeacherName(event.target.value)} placeholder="Type Name" autoComplete="off" autoFocus />
               <button type="submit" className="open-btn">Open my teacher board <span>→</span></button>
             </form>
             <p className="gate-fine">A small thank-you from the students whose future you helped build.</p>
