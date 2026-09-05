@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const tributes = [
   ['</>', 'Debugging with us'],
@@ -51,10 +51,74 @@ export default function App() {
   })
   const [submitStatus, setSubmitStatus] = useState('')
   const [messageMode, setMessageMode] = useState('student')
+  const [isRecording, setIsRecording] = useState(false)
+  const [recordedVideo, setRecordedVideo] = useState(null)
+  const [recordStatus, setRecordStatus] = useState('')
+  const mediaRecorderRef = useRef(null)
+  const cameraStreamRef = useRef(null)
+  const videoPreviewRef = useRef(null)
+  const recordedUrlRef = useRef('')
 
   useEffect(() => {
     window.localStorage.setItem('teachers-day-notes', JSON.stringify(notes))
   }, [notes])
+
+  useEffect(() => () => {
+    cameraStreamRef.current?.getTracks().forEach((track) => track.stop())
+    if (recordedUrlRef.current) URL.revokeObjectURL(recordedUrlRef.current)
+  }, [])
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' })
+      const chunks = []
+      cameraStreamRef.current = stream
+      mediaRecorderRef.current = recorder
+      recorder.ondataavailable = (event) => event.data.size && chunks.push(event.data)
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' })
+        const url = URL.createObjectURL(blob)
+        if (recordedUrlRef.current) URL.revokeObjectURL(recordedUrlRef.current)
+        recordedUrlRef.current = url
+        setRecordedVideo({ blob, url })
+        setRecordStatus('Your video is ready to share.')
+        stream.getTracks().forEach((track) => track.stop())
+      }
+      if (videoPreviewRef.current) videoPreviewRef.current.srcObject = stream
+      recorder.start()
+      setIsRecording(true)
+      setRecordStatus('Recording... say something wonderful!')
+    } catch {
+      setRecordStatus('Camera and microphone permission is needed to record.')
+    }
+  }
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current?.state === 'recording') mediaRecorderRef.current.stop()
+    if (videoPreviewRef.current) videoPreviewRef.current.srcObject = null
+    setIsRecording(false)
+  }
+
+  const shareVideo = async () => {
+    if (!recordedVideo) return
+    const file = new File([recordedVideo.blob], 'teachers-day-message.webm', { type: 'video/webm' })
+    if (navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) {
+      try {
+        await navigator.share({ title: 'Teachers\' Day video message', text: 'A Teachers\' Day message', files: [file] })
+        setRecordStatus('Video shared successfully.')
+        return
+      } catch (error) {
+        if (error.name === 'AbortError') return
+      }
+    }
+    const link = document.createElement('a')
+    link.href = recordedVideo.url
+    link.download = file.name
+    link.click()
+    window.location.href = `mailto:vermaarp2361@gmail.com,archanak28@gmail.com?subject=Teachers%27%20Day%20video%20message&body=Please%20attach%20the%20downloaded%20Teachers%27%20Day%20video%20message%20to%20this%20email.`
+    setRecordStatus('Video downloaded. Attach it to the email draft.')
+  }
 
   const modeCopy = messageMode === 'student'
     ? { label: 'Student → Teacher', placeholder: 'Thank your teacher for a lesson that stayed with you...' }
@@ -154,6 +218,20 @@ export default function App() {
           </section>
 
           <div className="tribute-grid">{tributes.map(([icon, label]) => <div className="tribute" key={label}><span>{icon}</span><strong>{label}</strong></div>)}</div>
+          <section className="video-message" aria-labelledby="video-title">
+            <div>
+              <span className="section-kicker">A message in motion</span>
+              <h2 id="video-title">Record a video for the board</h2>
+              <p>Say thank you, share a memory, or send a little encouragement.</p>
+            </div>
+            <video ref={videoPreviewRef} className={isRecording ? 'recording' : ''} autoPlay muted playsInline />
+            <div className="video-controls">
+              {!isRecording && <button type="button" onClick={startRecording}>{recordedVideo ? 'Record again' : 'Start recording'}</button>}
+              {isRecording && <button type="button" className="stop-recording" onClick={stopRecording}>Stop recording</button>}
+              {recordedVideo && !isRecording && <button type="button" className="share-video" onClick={shareVideo}>Share video</button>}
+            </div>
+            <small>{recordStatus || 'Your browser will ask for camera and microphone permission.'}</small>
+          </section>
           <h2 className="wall-title">The thank-you wall</h2>
           <p className="wall-caption">A shared space for the people who teach, learn, and grow together.</p>
           <div className="wall">{notes.map(([text, author], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small className="note-author"><strong>{author}</strong></small></article>)}</div>
