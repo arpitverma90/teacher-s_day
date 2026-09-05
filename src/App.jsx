@@ -38,7 +38,8 @@ export default function App() {
   const [notes, setNotes] = useState(() => {
     try {
       const deletedNotes = JSON.parse(window.localStorage.getItem('teachers-day-deleted-notes') || '[]')
-      return starterNotes.filter(([text]) => !deletedNotes.includes(text))
+      const addedNotes = JSON.parse(window.localStorage.getItem('teachers-day-added-notes') || '[]')
+      return [...starterNotes.filter(([text]) => !deletedNotes.includes(text)), ...addedNotes]
     } catch {
       return starterNotes
     }
@@ -162,7 +163,10 @@ export default function App() {
     const cleanStudentName = studentName.trim() || 'A grateful student'
     const shouldPin = messageMode === 'student'
     if (shouldPin) {
-      setNotes((current) => [...current, [cleanWish, cleanStudentName, modeCopy.label]])
+      const newNote = [cleanWish, cleanStudentName, modeCopy.label]
+      setNotes((current) => [...current, newNote])
+      const addedNotes = JSON.parse(window.localStorage.getItem('teachers-day-added-notes') || '[]')
+      window.localStorage.setItem('teachers-day-added-notes', JSON.stringify([...addedNotes, newNote]))
     }
     setSubmitStatus('Sending...')
     try {
@@ -192,11 +196,17 @@ export default function App() {
 
   const deleteNote = (noteIndex) => {
     setNotes((current) => {
-      const noteToDelete = current[noteIndex]?.[0]
+      const noteToDelete = current[noteIndex]
+      const noteText = noteToDelete?.[0]
       if (noteToDelete) {
-        const deletedNotes = JSON.parse(window.localStorage.getItem('teachers-day-deleted-notes') || '[]')
-        if (!deletedNotes.includes(noteToDelete)) {
-          window.localStorage.setItem('teachers-day-deleted-notes', JSON.stringify([...deletedNotes, noteToDelete]))
+        if (starterNotes.some(([text]) => text === noteText)) {
+          const deletedNotes = JSON.parse(window.localStorage.getItem('teachers-day-deleted-notes') || '[]')
+          if (!deletedNotes.includes(noteText)) {
+            window.localStorage.setItem('teachers-day-deleted-notes', JSON.stringify([...deletedNotes, noteText]))
+          }
+        } else {
+          const addedNotes = JSON.parse(window.localStorage.getItem('teachers-day-added-notes') || '[]')
+          window.localStorage.setItem('teachers-day-added-notes', JSON.stringify(addedNotes.filter(([text, author]) => text !== noteText || author !== noteToDelete[1])))
         }
       }
       return current.filter((_, index) => index !== noteIndex)
