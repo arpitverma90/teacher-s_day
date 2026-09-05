@@ -273,7 +273,6 @@ export default function App() {
           <p className="wall-caption">A shared space for the people who teach, learn, and grow together.</p>
           <div className="wall-tabs" role="tablist" aria-label="Thank-you wall content">
             <button type="button" className={wallView === 'notes' ? 'active' : ''} onClick={() => setWallView('notes')}>Pinned notes ({notes.length})</button>
-            <button type="button" className={wallView === 'videos' ? 'active' : ''} onClick={() => setWallView('videos')}>Pinned videos ({pinnedVideos.length})</button>
           </div>
           {wallView === 'notes' ? <div className="wall">{notes.map(([text, author], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small className="note-author"><strong>{author}</strong></small></article>)}</div> : <div className="video-wall">{pinnedVideos.length ? pinnedVideos.map((video, index) => <article className="pinned-video" key={`${video.url}-${index}`}><video src={video.url} controls playsInline /><small>{video.label}</small></article>) : <p className="empty-wall">No videos pinned yet. Record one and choose Pin video.</p>}</div>}
                         {recordedVideo && !isRecording && <><button type="button" className="share-video" onClick={shareVideo}>Share video</button>{videoMode === 'student' && <button type="button" className="pin-video" onClick={pinVideo}>Pin video</button>}<button type="button" className="delete-video" onClick={deleteVideo}>Delete video</button></>}
