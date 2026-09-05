@@ -50,6 +50,9 @@ export default function App() {
     if (!cleanWish) return
     setNotes((current) => [...current, [cleanWish, 'you, just now']])
     setWish('')
+    const subject = encodeURIComponent(`Teachers' Day message for ${teacherName}`)
+    const body = encodeURIComponent(`${cleanWish}\n\nSent from the Teachers' Day CS board.`)
+    window.location.href = `mailto:vermaarp2361@gmail.com?subject=${subject}&body=${body}`
     setBurst(true)
     window.setTimeout(() => setBurst(false), 4600)
   }
@@ -108,7 +111,7 @@ export default function App() {
           <h2 className="wall-title">The thank-you wall</h2>
           <p className="wall-caption">Leave a message for the teacher behind your next breakthrough.</p>
           <div className="wall">{notes.map(([text, author], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small>— {author}</small></article>)}</div>
-          <form className="add-wish" onSubmit={addWish}><input value={wish} onChange={(event) => setWish(event.target.value)} placeholder="Add your own thank-you note..." /><button type="submit">Pin it</button></form>
+          <form className="add-wish" onSubmit={addWish}><input value={wish} onChange={(event) => setWish(event.target.value)} placeholder="Add your own thank-you note..." /><button type="submit">Pin &amp; email</button></form>
           <footer className="board-footer"><span>◉</span><p>With gratitude, from all of us.</p><small>// keep learning. keep building. keep helping others.</small></footer>
         </section>
       )}
