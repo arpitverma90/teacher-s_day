@@ -251,7 +251,7 @@ export default function App() {
           </section>
 
           <div className="tribute-grid">{tributes.map(([icon, label]) => <div className="tribute" key={label}><span>{icon}</span><strong>{label}</strong></div>)}</div>
-          <section className="video-message" aria-labelledby="video-title">
+          <section className="video-message hidden-for-now" aria-labelledby="video-title">
             <div>
               <span className="section-kicker">A message in motion</span>
               <h2 id="video-title">Record a video for the board</h2>
