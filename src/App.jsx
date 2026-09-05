@@ -35,6 +35,7 @@ export default function App() {
   const [burst, setBurst] = useState(false)
   const [wish, setWish] = useState('')
   const [notes, setNotes] = useState(starterNotes)
+  const [submitStatus, setSubmitStatus] = useState('')
 
   const openBoard = (event) => {
     event.preventDefault()
@@ -44,17 +45,31 @@ export default function App() {
     window.setTimeout(() => setBurst(false), 4600)
   }
 
-  const addWish = (event) => {
+  const addWish = async (event) => {
     event.preventDefault()
     const cleanWish = wish.trim()
     if (!cleanWish) return
-    setNotes((current) => [...current, [cleanWish, 'you, just now']])
-    setWish('')
-    const subject = encodeURIComponent(`Teachers' Day message for ${teacherName}`)
-    const body = encodeURIComponent(`${cleanWish}\n\nSent from the Teachers' Day CS board.`)
-    window.location.href = `mailto:vermaarp2361@gmail.com?subject=${subject}&body=${body}`
-    setBurst(true)
-    window.setTimeout(() => setBurst(false), 4600)
+    setSubmitStatus('Sending...')
+    try {
+      const response = await fetch('https://formsubmit.co/ajax/vermaarp2361@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          _subject: `Teachers' Day message for ${teacherName}`,
+          teacher: teacherName,
+          message: cleanWish,
+          _template: 'table',
+        }),
+      })
+      if (!response.ok) throw new Error('Message could not be sent')
+      setNotes((current) => [...current, [cleanWish, 'you, just now']])
+      setWish('')
+      setSubmitStatus('Sent to the teacher board owner!')
+      setBurst(true)
+      window.setTimeout(() => setBurst(false), 4600)
+    } catch {
+      setSubmitStatus('Could not send. Please try again.')
+    }
   }
 
   return (
@@ -111,7 +126,8 @@ export default function App() {
           <h2 className="wall-title">The thank-you wall</h2>
           <p className="wall-caption">Leave a message for the teacher behind your next breakthrough.</p>
           <div className="wall">{notes.map(([text, author], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small>— {author}</small></article>)}</div>
-          <form className="add-wish" onSubmit={addWish}><input value={wish} onChange={(event) => setWish(event.target.value)} placeholder="Add your own thank-you note..." /><button type="submit">Pin &amp; email</button></form>
+          <form className="add-wish" onSubmit={addWish}><input value={wish} onChange={(event) => { setWish(event.target.value); setSubmitStatus('') }} placeholder="Add your own thank-you note..." /><button type="submit" disabled={submitStatus === 'Sending...'}>{submitStatus === 'Sending...' ? 'Sending...' : 'Pin & email'}</button></form>
+          {submitStatus && <p className={`submit-status ${submitStatus.startsWith('Sent') ? 'success' : 'error'}`}>{submitStatus}</p>}
           <footer className="board-footer"><span>◉</span><p>With gratitude, from all of us.</p><small>// keep learning. keep building. keep helping others.</small></footer>
         </section>
       )}
