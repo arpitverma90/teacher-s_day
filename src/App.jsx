@@ -232,7 +232,6 @@ export default function App() {
         </section>
       ) : (
         <section className="dashboard" aria-label="Personalized Teachers' Day board">
-          <button className="switch-name" type="button" onClick={() => setIsOpen(false)}>✎ Change teacher name</button>
           <header className="dash-top">
             <span className="dash-eyebrow">a little board, a lot of gratitude</span>
             <h1>Happy Teacher&apos;s Day,<br /><span>{teacherName}</span> ✦</h1>
