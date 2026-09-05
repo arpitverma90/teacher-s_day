@@ -68,6 +68,7 @@ export default function App() {
         body: JSON.stringify({
           _subject: `${modeCopy.label} message for ${teacherName}`,
           _cc: 'archanak28@gmail.com',
+          _replyto: 'archanak28@gmail.com',
           direction: modeCopy.label,
           student: cleanStudentName,
           teacher: teacherName,
@@ -77,7 +78,7 @@ export default function App() {
       })
       if (!response.ok) throw new Error('Message could not be sent')
       setWish('')
-      setSubmitStatus(messageMode === 'student' ? 'Pinned and sent to the teacher board owner!' : 'Sent privately to the student!')
+      setSubmitStatus(messageMode === 'student' ? 'Pinned and sent to both email addresses!' : 'Sent privately to both email addresses!')
       setBurst(true)
       window.setTimeout(() => setBurst(false), 4600)
     } catch {
