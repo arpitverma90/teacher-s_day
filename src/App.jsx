@@ -36,6 +36,11 @@ export default function App() {
   const [wish, setWish] = useState('')
   const [notes, setNotes] = useState(starterNotes)
   const [submitStatus, setSubmitStatus] = useState('')
+  const [messageMode, setMessageMode] = useState('student')
+
+  const modeCopy = messageMode === 'student'
+    ? { label: 'Student → Teacher', placeholder: 'Thank your teacher for a lesson that stayed with you...' }
+    : { label: 'Teacher → Student', placeholder: 'Leave an encouraging message for your student...' }
 
   const openBoard = (event) => {
     event.preventDefault()
@@ -55,14 +60,15 @@ export default function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
-          _subject: `Teachers' Day message for ${teacherName}`,
+          _subject: `${modeCopy.label} message for ${teacherName}`,
+          direction: modeCopy.label,
           teacher: teacherName,
           message: cleanWish,
           _template: 'table',
         }),
       })
       if (!response.ok) throw new Error('Message could not be sent')
-      setNotes((current) => [...current, [cleanWish, 'you, just now']])
+      setNotes((current) => [...current, [cleanWish, modeCopy.label]])
       setWish('')
       setSubmitStatus('Sent to the teacher board owner!')
       setBurst(true)
@@ -124,9 +130,14 @@ export default function App() {
 
           <div className="tribute-grid">{tributes.map(([icon, label]) => <div className="tribute" key={label}><span>{icon}</span><strong>{label}</strong></div>)}</div>
           <h2 className="wall-title">The thank-you wall</h2>
-          <p className="wall-caption">Leave a message for the teacher behind your next breakthrough.</p>
+          <p className="wall-caption">A shared space for the people who teach, learn, and grow together.</p>
           <div className="wall">{notes.map(([text, author], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small>— {author}</small></article>)}</div>
-          <form className="add-wish" onSubmit={addWish}><input value={wish} onChange={(event) => { setWish(event.target.value); setSubmitStatus('') }} placeholder="Add your own thank-you note..." /><button type="submit" disabled={submitStatus === 'Sending...'}>{submitStatus === 'Sending...' ? 'Sending...' : 'Pin & email'}</button></form>
+          <div className="message-mode" role="group" aria-label="Choose message direction">
+            <button type="button" className={messageMode === 'student' ? 'active' : ''} onClick={() => setMessageMode('student')}>Student → Teacher</button>
+            <button type="button" className={messageMode === 'teacher' ? 'active' : ''} onClick={() => setMessageMode('teacher')}>Teacher → Student</button>
+          </div>
+          <p className="message-mode-label">{modeCopy.label}</p>
+          <form className="add-wish" onSubmit={addWish}><input value={wish} onChange={(event) => { setWish(event.target.value); setSubmitStatus('') }} placeholder={modeCopy.placeholder} /><button type="submit" disabled={submitStatus === 'Sending...'}>{submitStatus === 'Sending...' ? 'Sending...' : 'Pin & email'}</button></form>
           {submitStatus && <p className={`submit-status ${submitStatus.startsWith('Sent') ? 'success' : 'error'}`}>{submitStatus}</p>}
           <footer className="board-footer"><span>◉</span><p>With gratitude, from all of us.</p><small>// keep learning. keep building. keep helping others.</small></footer>
         </section>
