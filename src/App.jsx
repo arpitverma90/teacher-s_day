@@ -15,7 +15,11 @@ const starterNotes = [
   ["Happy Teachers' Day! Thank you for patiently explaining things, turning every mistake into a learning opportunity, and teaching us that the best progress starts with better questions. Your guidance truly inspires us to learn and grow.", 'Archana Kamble'],
 ]
 
-const removeTemporaryNote = (savedNotes) => savedNotes.filter(([text, author]) => !(text.trim().toLowerCase() === 'thank you' && author.trim().toLowerCase() === 'arpit'))
+const removeTemporaryNote = (savedNotes) => savedNotes.filter(([text, author]) => {
+  const noteText = String(text).trim().toLowerCase()
+  const noteAuthor = String(author).trim().toLowerCase()
+  return !(noteText === 'thank you' && noteAuthor.startsWith('arpit'))
+})
 
 const classroomCaptions = [
   ['Teacher', 'You did not just teach syntax. You taught us how to think clearly when the answer was still hidden.'],
