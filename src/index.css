@@ -45,14 +45,14 @@ body{
   border:1.5px dashed rgba(201,79,104,0.35);
   border-radius:12px;
   pointer-events:none;
-}
-
-.corner{
-  position:absolute;
-  font-size:54px;
-  line-height:1;
-  opacity:0.9;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.06));
+  --cream: #fdf3ee;
+  --cream-2: #fbe9e2;
+  --rose: #e8607a;
+  --rose-dark: #c94f68;
+  --plum: #5b2a5e;
+  --ink: #4a3f45;
+  --leaf: #8ba888;
+  --gold: #cfa15a;
   pointer-events:none;
 }
 .corner.tl{ top:22px; left:20px; }
