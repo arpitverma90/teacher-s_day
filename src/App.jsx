@@ -10,9 +10,9 @@ const tributes = [
 ]
 
 const starterNotes = [
-  ['Explained it three times without once making me feel slow.', 'a student, years later'],
-  ['Made every error feel like a clue instead of a failure.', 'one very grateful developer'],
-  ['Taught us that the best programs start with better questions.', 'class of future builders'],
+  ['Explained it three times without once making me feel slow.', 'a student, years later', 'Student → Teacher'],
+  ['Made every error feel like a clue instead of a failure.', 'one very grateful developer', 'Student → Teacher'],
+  ['Taught us that the best programs start with better questions.', 'class of future builders', 'Student → Teacher'],
 ]
 
 const classroomCaptions = [
@@ -71,7 +71,7 @@ export default function App() {
         }),
       })
       if (!response.ok) throw new Error('Message could not be sent')
-      setNotes((current) => [...current, [cleanWish, `${cleanStudentName} · ${modeCopy.label}`]])
+      setNotes((current) => [...current, [cleanWish, cleanStudentName, modeCopy.label]])
       setWish('')
       setSubmitStatus('Sent to the teacher board owner!')
       setBurst(true)
@@ -134,7 +134,7 @@ export default function App() {
           <div className="tribute-grid">{tributes.map(([icon, label]) => <div className="tribute" key={label}><span>{icon}</span><strong>{label}</strong></div>)}</div>
           <h2 className="wall-title">The thank-you wall</h2>
           <p className="wall-caption">A shared space for the people who teach, learn, and grow together.</p>
-          <div className="wall">{notes.map(([text, author], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small>— {author}</small></article>)}</div>
+          <div className="wall">{notes.map(([text, author, direction], index) => <article className="sticky" key={`${text}-${index}`}><span>{text}</span><small className="note-author"><b>{author.charAt(0).toUpperCase()}</b><strong>{author}</strong><em>{direction || 'Student → Teacher'}</em></small></article>)}</div>
           <div className="message-mode" role="group" aria-label="Choose message direction">
             <button type="button" className={messageMode === 'student' ? 'active' : ''} onClick={() => setMessageMode('student')}>Student → Teacher</button>
             <button type="button" className={messageMode === 'teacher' ? 'active' : ''} onClick={() => setMessageMode('teacher')}>Teacher → Student</button>
