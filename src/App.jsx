@@ -141,7 +141,7 @@ export default function App() {
           </div>
           <p className="message-mode-label">{modeCopy.label}</p>
           <form className="add-wish" onSubmit={addWish}>
-            <input className="student-name-input" value={studentName} onChange={(event) => { setStudentName(event.target.value); setSubmitStatus('') }} placeholder="Student name" aria-label="Student name" />
+            {messageMode === 'student' && <input className="student-name-input" value={studentName} onChange={(event) => { setStudentName(event.target.value); setSubmitStatus('') }} placeholder="Student name" aria-label="Student name" />}
             <input value={wish} onChange={(event) => { setWish(event.target.value); setSubmitStatus('') }} placeholder={modeCopy.placeholder} aria-label="Thank-you message" />
             <button type="submit" disabled={submitStatus === 'Sending...'}>{submitStatus === 'Sending...' ? 'Sending...' : 'Pin & email'}</button>
           </form>
