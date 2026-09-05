@@ -56,6 +56,10 @@ export default function App() {
     const cleanWish = wish.trim()
     if (!cleanWish) return
     const cleanStudentName = studentName.trim() || 'A grateful student'
+    const shouldPin = messageMode === 'student'
+    if (shouldPin) {
+      setNotes((current) => [...current, [cleanWish, cleanStudentName, modeCopy.label]])
+    }
     setSubmitStatus('Sending...')
     try {
       const response = await fetch('https://formsubmit.co/ajax/vermaarp2361@gmail.com', {
@@ -71,15 +75,12 @@ export default function App() {
         }),
       })
       if (!response.ok) throw new Error('Message could not be sent')
-      if (messageMode === 'student') {
-        setNotes((current) => [...current, [cleanWish, cleanStudentName, modeCopy.label]])
-      }
       setWish('')
       setSubmitStatus(messageMode === 'student' ? 'Pinned and sent to the teacher board owner!' : 'Sent privately to the student!')
       setBurst(true)
       window.setTimeout(() => setBurst(false), 4600)
     } catch {
-      setSubmitStatus('Could not send. Please try again.')
+      setSubmitStatus(shouldPin ? 'Pinned on this board. Email could not be sent.' : 'Could not send. Please try again.')
     }
   }
 
