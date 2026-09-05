@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const tributes = [
   ['</>', 'Debugging with us'],
@@ -35,9 +35,20 @@ export default function App() {
   const [burst, setBurst] = useState(false)
   const [wish, setWish] = useState('')
   const [studentName, setStudentName] = useState('')
-  const [notes, setNotes] = useState(starterNotes)
+  const [notes, setNotes] = useState(() => {
+    try {
+      const savedNotes = window.localStorage.getItem('teachers-day-notes')
+      return savedNotes ? JSON.parse(savedNotes) : starterNotes
+    } catch {
+      return starterNotes
+    }
+  })
   const [submitStatus, setSubmitStatus] = useState('')
   const [messageMode, setMessageMode] = useState('student')
+
+  useEffect(() => {
+    window.localStorage.setItem('teachers-day-notes', JSON.stringify(notes))
+  }, [notes])
 
   const modeCopy = messageMode === 'student'
     ? { label: 'Student → Teacher', placeholder: 'Thank your teacher for a lesson that stayed with you...' }
