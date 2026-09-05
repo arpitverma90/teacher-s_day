@@ -37,9 +37,8 @@ export default function App() {
   const [studentName, setStudentName] = useState('')
   const [notes, setNotes] = useState(() => {
     try {
-      const deletedNotes = JSON.parse(window.localStorage.getItem('teachers-day-deleted-notes') || '[]')
       const addedNotes = JSON.parse(window.localStorage.getItem('teachers-day-added-notes') || '[]')
-      return [...starterNotes.filter(([text]) => !deletedNotes.includes(text)), ...addedNotes]
+      return [...starterNotes, ...addedNotes]
     } catch {
       return starterNotes
     }
@@ -199,12 +198,7 @@ export default function App() {
       const noteToDelete = current[noteIndex]
       const noteText = noteToDelete?.[0]
       if (noteToDelete) {
-        if (starterNotes.some(([text]) => text === noteText)) {
-          const deletedNotes = JSON.parse(window.localStorage.getItem('teachers-day-deleted-notes') || '[]')
-          if (!deletedNotes.includes(noteText)) {
-            window.localStorage.setItem('teachers-day-deleted-notes', JSON.stringify([...deletedNotes, noteText]))
-          }
-        } else {
+        if (!starterNotes.some(([text]) => text === noteText)) {
           const addedNotes = JSON.parse(window.localStorage.getItem('teachers-day-added-notes') || '[]')
           window.localStorage.setItem('teachers-day-added-notes', JSON.stringify(addedNotes.filter(([text, author]) => text !== noteText || author !== noteToDelete[1])))
         }
