@@ -10,9 +10,9 @@ const tributes = [
 ]
 
 const starterNotes = [
-  ['Explained it three times without once making me feel slow.', 'a student, years later'],
-  ['Made every error feel like a clue instead of a failure.', 'one very grateful developer'],
-  ['Taught us that the best programs start with better questions.', 'class of future builders'],
+  ['Explained it three times without once making me feel slow.', 'Arpit Verma'],
+  ['Made every error feel like a clue instead of a failure.', 'Riya Rawat'],
+  ['Taught us that the best programs start with better questions.', 'Archana Kamble'],
 ]
 
 const classroomCaptions = [
