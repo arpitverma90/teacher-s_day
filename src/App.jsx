@@ -12,7 +12,7 @@ const tributes = [
 const starterNotes = [
   ['Explained it three times without once making me feel slow.', 'Arpit Verma'],
   ['Made every error feel like a clue instead of a failure.', 'Riya Rawat'],
-  ['Taught us that the best programs start with better questions.', 'Archana Kamble'],
+  ["Happy Teachers' Day! Thank you for patiently explaining things, turning every mistake into a learning opportunity, and teaching us that the best progress starts with better questions. Your guidance truly inspires us to learn and grow.", 'Archana Kamble'],
 ]
 
 const classroomCaptions = [
